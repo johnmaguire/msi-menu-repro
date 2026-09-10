@@ -46,7 +46,7 @@ $result = [ordered]@{
     package=$MsiPath; productCode=$productCode; packageSha256=(Get-FileHash -LiteralPath $MsiPath -Algorithm SHA256).Hash
     observeSeconds=$ObserveSeconds; totalObservationSeconds=(10+$ObserveSeconds); injectionAt=$null; injection=$null; keyboardBefore=$null; windowAtInjection=$null
     menuSeen=$false; menuModeAtObservationEnd=$false; completedBeforeRelease=$false
-    preReleaseLogQuietSeconds=$null; releaseSent=$false; progressedAfterRelease=$false
+    preReleaseLogQuietSeconds=$null; releaseSent=$false; releaseInput=$null; progressedAfterRelease=$false
     installerExitCode=$null; cleanupExitCode=$null; keepInstalled=[bool]$KeepInstalled; error=$null; cleanupError=$null
 }
 function Log([string]$message) {
@@ -67,6 +67,7 @@ function Snapshot([IntPtr]$window) {
 function CheckInput($sent) { if (-not $sent.Success) { throw ('Input injection failed: ' + ($sent | ConvertTo-Json -Depth 5 -Compress)) } }
 function CheckNavigationInput($sent) {
     # Enter can replace the wizard window before SendInput returns.
+    if ($sent.Attempted -eq 0 -and $sent.Injected -eq 0) { Log 'Wizard window changed before Enter; retrying'; return }
     if ($sent.Attempted -ne 2 -or $sent.Injected -ne 2) { CheckInput $sent }
 }
 function ReadIdentity {
@@ -197,12 +198,15 @@ try {
     if ($result.menuModeAtObservationEnd) {
         if (-not $snapshot.isForeground) { throw 'Foreground changed before release; refusing to send Esc.' }
         $result['releaseAt']=[DateTime]::UtcNow.ToString('o')
-        CheckInput ([MsiMenuRepro.Native]::PressKey($dialog,0x1B))
-        $result.releaseSent=$true; Log 'Sent one Esc after observation'
+        $result.releaseInput=[MsiMenuRepro.Native]::PressKey($dialog,0x1B)
+        $result.releaseSent=($result.releaseInput.Injected -gt 0)
+        CheckInput $result.releaseInput
+        Log 'Sent one Esc after observation'
         $resumeUntil=[DateTime]::UtcNow.AddSeconds(15)
         while ([DateTime]::UtcNow -lt $resumeUntil) {
             $after=ReadLog
-            if ($after -match 'Action ended [^\r\n]*Wix4CloseApplications_X64\. Return value 1\.' -or $after -match 'Action ended [^\r\n]*ExecuteAction\. Return value 1\.') { $result.progressedAfterRelease=$true; break }
+            $newText=if ($after.Length -gt $before.Length) { $after.Substring($before.Length) } else { '' }
+            if ($newText -match 'Action ended [^\r\n]*Wix4CloseApplications_X64\. Return value 1\.' -or $newText -match 'Action ended [^\r\n]*ExecuteAction\. Return value 1\.') { $result.progressedAfterRelease=$true; break }
             Start-Sleep -Milliseconds 50
         }
     }

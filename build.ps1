@@ -57,10 +57,10 @@ foreach ($name in @('Repro.Native.dll', 'msi-menu-repro-sleeper.exe')) {
 $checksums = Get-ChildItem -LiteralPath $packageDirectory -File -Recurse | Sort-Object FullName | ForEach-Object {
     '{0}  {1}' -f (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant(), $_.FullName.Substring($packageDirectory.Length + 1).Replace('\','/')
 }
-$checksums | Set-Content -LiteralPath (Join-Path $packageDirectory 'SHA256SUMS') -Encoding ASCII
+[IO.File]::WriteAllText((Join-Path $packageDirectory 'SHA256SUMS'), ($checksums -join "`n") + "`n", [Text.Encoding]::ASCII)
 
 $archive = Join-Path $outputRoot 'msi-menu-repro.zip'
 Compress-Archive -Path (Join-Path $packageDirectory '*') -DestinationPath $archive -Force
-'{0}  msi-menu-repro.zip' -f (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant() |
-    Set-Content -LiteralPath (Join-Path $outputRoot 'msi-menu-repro.zip.sha256') -Encoding ASCII
+$archiveChecksum = '{0}  msi-menu-repro.zip' -f (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
+[IO.File]::WriteAllText((Join-Path $outputRoot 'msi-menu-repro.zip.sha256'), $archiveChecksum + "`n", [Text.Encoding]::ASCII)
 Write-Host "Built $archive"
