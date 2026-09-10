@@ -36,4 +36,4 @@ The exact reset sequence can trigger this stall in the standalone installer, but
 
 The no-input control and recovery after Escape distinguish the stall from the deliberate application-close timeout. The passive comparisons validate complete installation/removal for this package and these synthetic inputs. They do not validate a production upgrade during an actual TightVNC disconnect.
 
-No live TightVNC disconnect, VPN interruption, or stack capture was performed in this validation. Menu state and MSI progress are the evidence collected here. Earlier differing exact-reset results on the same DLL versions do not establish that a Windows update fixed the trigger.
+No live TightVNC disconnect, VPN interruption, or stack capture was performed in this validation. Menu state and MSI progress are the evidence collected here.

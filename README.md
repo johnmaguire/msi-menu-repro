@@ -86,15 +86,13 @@ The helper observes `GUI_INMENUMODE` through `GetGUIThreadInfo`; it does not cap
 
 ## Evidence and limits
 
-The standalone package's [recorded validation](docs/validation.md) includes full-UI stalls, successful passive comparisons, and an exact-reset run that did not reproduce. It records test order because the exact reset has produced different results between runs, including within one desktop session. The paired Alt tap is a separate control for the menu-mode behavior.
+The [recorded standalone validation](docs/validation.md) used Windows 11 build `26100.9445`, with `msi.dll` at `5.0.26100.9444` and `msihnd.dll` at `5.0.26100.7920`.
 
-The original investigation used a different application's installer. Its exact TightVNC replay reproduced the stall on Windows 11 build 26100 with both `msi.dll` and `msihnd.dll` at `5.0.26100.1742`.
+With full UI, the paired Alt tap reproduced the stall. The exact TightVNC reset sequence completed normally before that control, then reproduced the stall when tested again afterward in the same desktop session. Both stalls resumed after Escape. These observations establish that the exact reset can trigger the stall, but do not isolate why the two reset trials differed.
 
-In a later session on the updated VM, with `msi.dll` at `5.0.26100.9444` and `msihnd.dll` at `5.0.26100.7920`, that replay did not trigger menu mode. A paired Alt tap still reproduced the stall. The differing results do not by themselves establish that a Windows update fixed the TightVNC trigger.
+With `/passive`, both input sequences completed installation and removal without entering menu mode or needing Escape. These were synthetic-input tests of this standalone package; a live TightVNC disconnect during a production upgrade was not tested here.
 
-Historical `/passive` tests progressed through the affected notification under paired Alt input. They did not validate a complete upgrade during a real TightVNC disconnect. A successful passive run here is evidence for that run's input sequence and Windows build, not a universal workaround claim.
-
-This standalone package makes timing and evidence collection repeatable. It does **not** promise the trigger will reproduce on every Windows build. Record the input mode, foreground validation, menu state, progress before recovery, and progress after recovery separately.
+Record test order, input mode, foreground validation, menu state, and progress before and after recovery. Preserve runs where the trigger did not reproduce alongside successful reproductions.
 
 ## Optional live TightVNC test
 
