@@ -1,0 +1,5 @@
+MSI Menu Reproduction
+
+This harmless text file is the installer's entire payload.
+The separate sleeper and input helper run from the extracted download.
+No services, drivers, firewall rules, or network settings are installed.

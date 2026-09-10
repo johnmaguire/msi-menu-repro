@@ -1,0 +1,8 @@
+/dist/
+/results/
+/artifacts/
+**/bin/
+**/obj/
+*.dmp
+.DS_Store
+.build/

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui"
+     xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
+  <Package Name="MSI Menu Reproduction"
+           Manufacturer="MSI Menu Reproduction"
+           Version="1.0.0"
+           ProductCode="5808E40F-7F07-400C-ADE4-8F502704811D"
+           UpgradeCode="06A1D646-9F6A-4162-BC0D-51CA755AF44A"
+           Language="1033"
+           Scope="perMachine">
+    <MajorUpgrade DowngradeErrorMessage="A newer version of MSI Menu Reproduction is installed." />
+    <MediaTemplate EmbedCab="yes" />
+    <Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+
+    <!-- A windowless sleeper keeps the real WiX close action waiting long enough to inject input. -->
+    <util:CloseApplication Id="CloseReproSleeper"
+                           Target="msi-menu-repro-sleeper.exe"
+                           CloseMessage="yes"
+                           TerminateProcess="1"
+                           RebootPrompt="no"
+                           Timeout="10"
+                           Condition="NOT Installed" />
+
+    <UI>
+      <ui:WixUI Id="WixUI_InstallDir" />
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="InstallDirDlg"
+               Order="99" Condition="NOT Installed" />
+      <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="99" />
+    </UI>
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLDIR" Name="MSI Menu Reproduction">
+        <Component Id="Payload" Guid="0CC44F26-0EB8-48FF-A0A5-278C23E38B95">
+          <File Id="PayloadFile" Source="$(sys.SOURCEFILEDIR)payload.txt" KeyPath="yes" />
+        </Component>
+      </Directory>
+    </StandardDirectory>
+    <Feature Id="Main" Title="MSI Menu Reproduction" Level="1">
+      <ComponentRef Id="Payload" />
+    </Feature>
+  </Package>
+</Wix>
