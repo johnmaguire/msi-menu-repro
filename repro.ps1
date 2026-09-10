@@ -12,6 +12,8 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 2
 $productCode = '{5808E40F-7F07-400C-ADE4-8F502704811D}'
 $productName = 'MSI Menu Reproduction'
+$completionAction = if ($UI -eq 'Full') { 'ExecuteAction' } else { 'INSTALL' }
+$completionPattern = 'Action ended [^\r\n]*' + $completionAction + '\. Return value 1\.'
 if ($env:OS -ne 'Windows_NT') { throw 'Run this reproduction on Windows.' }
 if (-not [Environment]::Is64BitProcess) { throw 'Run the reproduction in 64-bit Windows PowerShell.' }
 $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
@@ -173,12 +175,12 @@ try {
     $lastFlags=-1
     while ([DateTime]::UtcNow -lt $until -and -not $msi.HasExited) {
         $text=ReadLog
-        if ($text -match 'Action ended [^\r\n]*ExecuteAction\. Return value 1\.') { $result.completedBeforeRelease=$true; break }
+        if ($text -match $completionPattern) { $result.completedBeforeRelease=$true; break }
         $snapshot=Snapshot $dialog
         if (-not $snapshot.valid -or -not $snapshot.isForeground -or $snapshot.pid -ne $msi.Id -or $snapshot.tid -ne $result.windowAtInjection.tid -or $snapshot.className -ne $className) {
             # The success dialog can replace the progress dialog during this sample.
             $text=ReadLog
-            if ($text -match 'Action ended [^\r\n]*ExecuteAction\. Return value 1\.' -or $msi.HasExited) { break }
+            if ($text -match $completionPattern -or $msi.HasExited) { break }
             throw 'The progress window changed or lost foreground during observation; the run is invalid.'
         }
         if ($snapshot.flags -band 4) { $result.menuSeen=$true }
@@ -187,7 +189,7 @@ try {
     }
     if ($msi.HasExited) { $msi.WaitForExit(); $result.completedBeforeRelease=($msi.ExitCode -eq 0 -or $msi.ExitCode -eq 3010) }
     $before=ReadLog
-    if ($before -match 'Action ended [^\r\n]*ExecuteAction\. Return value 1\.') { $result.completedBeforeRelease=$true }
+    if ($before -match $completionPattern) { $result.completedBeforeRelease=$true }
     [IO.File]::WriteAllText((Join-Path $OutputDirectory 'before-release.log'),$before,(New-Object Text.UTF8Encoding($false)))
     $snapshot=Snapshot $dialog
     $result.menuModeAtObservationEnd=($snapshot.valid -and $snapshot.pid -eq $msi.Id -and $snapshot.tid -eq $result.windowAtInjection.tid -and [bool]($snapshot.flags -band 4))
@@ -206,14 +208,14 @@ try {
         while ([DateTime]::UtcNow -lt $resumeUntil) {
             $after=ReadLog
             $newText=if ($after.Length -gt $before.Length) { $after.Substring($before.Length) } else { '' }
-            if ($newText -match 'Action ended [^\r\n]*Wix4CloseApplications_X64\. Return value 1\.' -or $newText -match 'Action ended [^\r\n]*ExecuteAction\. Return value 1\.') { $result.progressedAfterRelease=$true; break }
+            if ($newText -match 'Action ended [^\r\n]*Wix4CloseApplications_X64\. Return value 1\.' -or $newText -match $completionPattern) { $result.progressedAfterRelease=$true; break }
             Start-Sleep -Milliseconds 50
         }
     }
     $finishUntil=[DateTime]::UtcNow.AddSeconds(60)
     while (-not $msi.HasExited -and [DateTime]::UtcNow -lt $finishUntil) {
         $text=ReadLog
-        if ($UI -eq 'Full' -and $text -match 'Action ended [^\r\n]*ExecuteAction\. Return value 1\.') {
+        if ($UI -eq 'Full' -and $text -match $completionPattern) {
             $finish=[MsiMenuRepro.Native]::FindDialog([uint32]$msi.Id,$className)
             if ($finish -ne [IntPtr]::Zero -and [MsiMenuRepro.Native]::TryForeground($finish)) {
                 Start-Sleep -Milliseconds 100; CheckNavigationInput ([MsiMenuRepro.Native]::PressKey($finish,0x0D)); Log 'Finish Enter'
