@@ -20,6 +20,7 @@ The standalone reproduction installs a harmless payload and uses a windowless sl
 - `msihnd.dll` version:
 - Windows PowerShell version:
 - Console/session type and elevation:
+- Test order, reboot/session boundaries, and any earlier Alt input:
 - TightVNC Server version, if used:
 - Viewer name/version and operating system, if used:
 - Other connected viewers, if any:
@@ -61,6 +62,7 @@ For a live disconnect test, describe when the viewer disconnected, how the last 
 - Time from Escape to next progress, if observed:
 - Successful repetitions / valid attempts for each trigger:
 - Invalid attempts and reasons, including input failures or foreground changes:
+- Differences between an exact reset before and after the paired Alt control:
 
 An MSI error or failed injection is not a successful no-stall control. A run where the exact replay did not enter menu mode should be reported as **trigger not reproduced**, even if a separate paired Alt run stalled.
 

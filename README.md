@@ -14,6 +14,8 @@ Open **64-bit Windows PowerShell 5.1 as Administrator**, change to the extracted
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\repro.ps1 -Input TightVncReset -UI Full
 ```
 
+If this reports `TriggerNotReproduced`, run the separate `AltTap` control below to demonstrate the Windows Installer behavior. The exact reset can produce different results between runs; preserve the result and record whether the Alt control ran before or after it.
+
 Leave the keyboard and mouse alone while the test runs. The helper starts a windowless sleeper, launches the MSI, advances its setup UI, and injects input during the installer's ten-second application-close wait. It checks that the expected installer owns the foreground, records menu state and progress, and observes for up to 35 seconds after injection before attempting recovery with Escape. Observation ends early if installation completes. The helper then finishes the installer and removes its own test product.
 
 Run these controls separately in the same session:
@@ -83,6 +85,8 @@ installer notification -> MsiUIMessageContext::Invoke
 The helper observes `GUI_INMENUMODE` through `GetGUIThreadInfo`; it does not capture or decode stacks. Combine that observation with the MSI log and progress after Escape when assessing a new run. [Microsoft: GUITHREADINFO](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-guithreadinfo).
 
 ## Evidence and limits
+
+The standalone package's [recorded validation](docs/validation.md) includes full-UI stalls, successful passive comparisons, and an exact-reset run that did not reproduce. It records test order because the exact reset has produced different results between runs, including within one desktop session. The paired Alt tap is a separate control for the menu-mode behavior.
 
 The original investigation used a different application's installer. Its exact TightVNC replay reproduced the stall on Windows 11 build 26100 with both `msi.dll` and `msihnd.dll` at `5.0.26100.1742`.
 

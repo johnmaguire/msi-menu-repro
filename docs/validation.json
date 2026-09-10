@@ -1,0 +1,590 @@
+{
+  "schemaVersion": 1,
+  "commit": "81c0d4ef5252c3ecc0440d4bfc206c96a7154eb6",
+  "actionsRun": "https://github.com/johnmaguire/msi-menu-repro/actions/runs/34431542745",
+  "zipSha256": "35965dcb33d3bdb9e1f44564c6c49efaaa7fc772bee65f050ae6f33bdfe0bcba",
+  "msiSha256": "311fa1e462886079e80f9c15c475ab9a8a10772e59d25bb17295775e0fc4b53b",
+  "scriptSha256": "38cc56a57f771a3ca829de28f6ba396d1160b6f0b1a03fcef4b3431fa4fe8d37",
+  "freshDesktopSessionBeforeFirstCase": false,
+  "sessionHistory": "VM restarted before an earlier exact-reset run, which did not reproduce. The following no-input trial was invalid because Windows denied foreground access; it injected no trigger and its idle Welcome window was dismissed. The six runs below then used one persistent classic PowerShell console, with no intervening reboot.",
+  "environment": {
+    "build": "26100",
+    "ubr": 9445,
+    "displayVersion": "24H2",
+    "sessionId": 1,
+    "is64BitProcess": true,
+    "dlls": [
+      {
+        "name": "msi.dll",
+        "fileVersion": "5.0.26100.9444",
+        "sha256": "6DF15971D5D40D4BED69F228183A8B4583DC20F43C9F38B72F893A626BF63F2D"
+      },
+      {
+        "name": "msihnd.dll",
+        "fileVersion": "5.0.26100.7920 (WinBuild.160101.0800)",
+        "sha256": "671EE6649DEBDBA28590454B1E8BB80F1BE3D72F11B3B4EAC4485DB9A38D066C"
+      },
+      {
+        "name": "user32.dll",
+        "fileVersion": "10.0.26100.8117 (WinBuild.160101.0800)",
+        "sha256": "93A4310E66A47FA359F588C2EBDA64FE3651771C6F9FF30D462A77215A2E558E"
+      },
+      {
+        "name": "win32u.dll",
+        "fileVersion": "10.0.26100.9444 (WinBuild.160101.0800)",
+        "sha256": "9CD636E8A1B300E2F4B16F339D650EDA71FA02B92B100E4B2F89CE7C04811767"
+      }
+    ],
+    "helperSha256": "89EF05BD7841729FECB19A7793211E271904CA0F34A0BBCD088001C7F727A429"
+  },
+  "runs": [
+    {
+      "order": 1,
+      "case": "full-reset",
+      "startedAt": "2026-09-10T03:06:13.1543438Z",
+      "finishedAt": "2026-09-10T03:06:31.2661490Z",
+      "input": "TightVncReset",
+      "ui": "Full",
+      "verdict": "TriggerNotReproduced",
+      "menuSeen": false,
+      "menuModeAtObservationEnd": false,
+      "completedBeforeRelease": true,
+      "preReleaseLogQuietSeconds": 0.0374266,
+      "releaseSent": false,
+      "progressedAfterRelease": false,
+      "installerExitCode": 0,
+      "cleanupExitCode": 0,
+      "foregroundValidated": true,
+      "flagsBeforeInput": 0,
+      "modifiersDownBeforeInput": false,
+      "inputCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "inputEvents": [
+        {
+          "VirtualKey": 18,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 164,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 165,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 16,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 160,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 161,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 17,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 162,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 163,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 91,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 92,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 46,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        }
+      ],
+      "releaseInput": null,
+      "sourceHashes": {
+        "result.json": "1a8930b921a1977df97f5b59e79791e8addf7cfa6791153f00a1294f3f0e679e",
+        "events.log": "b6054bb773155b039e574cfbcda09cfe98bf4ef96e189dc47dc998daf2ea5400",
+        "install.log": "f6d41d3d613d5a581796cf3bf079f11de79dcec2e2ad9aeee0b66ec3b944dd9a",
+        "environment.json": "5909d306733aefa17fe37fa1da91cdce2f86d73bab4d4e75c88c2e39fbd55208"
+      }
+    },
+    {
+      "order": 2,
+      "case": "full-none",
+      "startedAt": "2026-09-10T03:06:31.3058310Z",
+      "finishedAt": "2026-09-10T03:06:47.6126759Z",
+      "input": "None",
+      "ui": "Full",
+      "verdict": "ControlCompleted",
+      "menuSeen": false,
+      "menuModeAtObservationEnd": false,
+      "completedBeforeRelease": true,
+      "preReleaseLogQuietSeconds": 0.013788799999999999,
+      "releaseSent": false,
+      "progressedAfterRelease": false,
+      "installerExitCode": 0,
+      "cleanupExitCode": 0,
+      "foregroundValidated": true,
+      "flagsBeforeInput": 0,
+      "modifiersDownBeforeInput": false,
+      "inputCounts": [],
+      "inputEvents": [],
+      "releaseInput": null,
+      "sourceHashes": {
+        "result.json": "d4538449fca3aa4ad2f06a21279a7b04c528d2729138a3fd6bebc122c3741b5c",
+        "events.log": "7723ad4a3f7edd91aebd5fe8ba2fdef362d1af56ab0dd687b648d564ed62fdc0",
+        "install.log": "ca7bb2d5b5f1bbc2518b94986c14db283cdb879de1c9d69dcf45b1aeca505b86",
+        "environment.json": "5909d306733aefa17fe37fa1da91cdce2f86d73bab4d4e75c88c2e39fbd55208"
+      }
+    },
+    {
+      "order": 3,
+      "case": "full-alt",
+      "startedAt": "2026-09-10T03:06:47.6302904Z",
+      "finishedAt": "2026-09-10T03:07:30.8527157Z",
+      "input": "AltTap",
+      "ui": "Full",
+      "verdict": "Reproduced",
+      "menuSeen": true,
+      "menuModeAtObservationEnd": true,
+      "completedBeforeRelease": false,
+      "preReleaseLogQuietSeconds": 26.680490799999998,
+      "releaseSent": true,
+      "progressedAfterRelease": true,
+      "installerExitCode": 0,
+      "cleanupExitCode": 0,
+      "foregroundValidated": true,
+      "flagsBeforeInput": 0,
+      "modifiersDownBeforeInput": false,
+      "inputCounts": [
+        1,
+        1
+      ],
+      "inputEvents": [
+        {
+          "VirtualKey": 18,
+          "Flags": 0,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 18,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        }
+      ],
+      "releaseInput": {
+        "Success": true,
+        "Attempted": 2,
+        "Injected": 2,
+        "LastError": 0,
+        "Error": null,
+        "ForegroundBefore": 983654,
+        "ForegroundAfter": 983654,
+        "Events": [
+          {
+            "VirtualKey": 27,
+            "Flags": 0,
+            "Injected": 1,
+            "LastError": 0
+          },
+          {
+            "VirtualKey": 27,
+            "Flags": 2,
+            "Injected": 1,
+            "LastError": 0
+          }
+        ],
+        "Counts": [
+          2
+        ]
+      },
+      "sourceHashes": {
+        "result.json": "c807a2dc48a328b69edefd7feb8a0c1b11dd70a28994bbe02a6226b2b882ffd4",
+        "events.log": "b8a85f77ede130d81f9a6b10d5635cac191031ad032fe986013f8ab67a40c60d",
+        "install.log": "3751dfb33c09d47ad92cf1b0c537d9d8ea65160f6f3ddf951fbed6dae1a09167",
+        "environment.json": "5909d306733aefa17fe37fa1da91cdce2f86d73bab4d4e75c88c2e39fbd55208"
+      }
+    },
+    {
+      "order": 4,
+      "case": "full-reset-after-alt",
+      "startedAt": "2026-09-10T03:07:30.8723909Z",
+      "finishedAt": "2026-09-10T03:08:14.0980745Z",
+      "input": "TightVncReset",
+      "ui": "Full",
+      "verdict": "Reproduced",
+      "menuSeen": true,
+      "menuModeAtObservationEnd": true,
+      "completedBeforeRelease": false,
+      "preReleaseLogQuietSeconds": 26.6684485,
+      "releaseSent": true,
+      "progressedAfterRelease": true,
+      "installerExitCode": 0,
+      "cleanupExitCode": 0,
+      "foregroundValidated": true,
+      "flagsBeforeInput": 0,
+      "modifiersDownBeforeInput": false,
+      "inputCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "inputEvents": [
+        {
+          "VirtualKey": 18,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 164,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 165,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 16,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 160,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 161,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 17,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 162,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 163,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 91,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 92,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 46,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        }
+      ],
+      "releaseInput": {
+        "Success": true,
+        "Attempted": 2,
+        "Injected": 2,
+        "LastError": 0,
+        "Error": null,
+        "ForegroundBefore": 852792,
+        "ForegroundAfter": 852792,
+        "Events": [
+          {
+            "VirtualKey": 27,
+            "Flags": 0,
+            "Injected": 1,
+            "LastError": 0
+          },
+          {
+            "VirtualKey": 27,
+            "Flags": 2,
+            "Injected": 1,
+            "LastError": 0
+          }
+        ],
+        "Counts": [
+          2
+        ]
+      },
+      "sourceHashes": {
+        "result.json": "91aceeedaa7870c51871369b86b856745f5864df013dc57d41149de2036d240e",
+        "events.log": "e9b6d8d3ed11b26916379ed61ee21b201492085ce3bcd9245518c90d6a177861",
+        "install.log": "f0f497de81b31fba1e4843e600efd0628e0b2a8b3a9da97910455b5869b3fbba",
+        "environment.json": "5909d306733aefa17fe37fa1da91cdce2f86d73bab4d4e75c88c2e39fbd55208"
+      }
+    },
+    {
+      "order": 5,
+      "case": "passive-alt",
+      "startedAt": "2026-09-10T03:08:14.1169128Z",
+      "finishedAt": "2026-09-10T03:08:25.8974414Z",
+      "input": "AltTap",
+      "ui": "Passive",
+      "verdict": "TriggerNotReproduced",
+      "menuSeen": false,
+      "menuModeAtObservationEnd": false,
+      "completedBeforeRelease": true,
+      "preReleaseLogQuietSeconds": 0,
+      "releaseSent": false,
+      "progressedAfterRelease": false,
+      "installerExitCode": 0,
+      "cleanupExitCode": 0,
+      "foregroundValidated": true,
+      "flagsBeforeInput": 0,
+      "modifiersDownBeforeInput": false,
+      "inputCounts": [
+        1,
+        1
+      ],
+      "inputEvents": [
+        {
+          "VirtualKey": 18,
+          "Flags": 0,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 18,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        }
+      ],
+      "releaseInput": null,
+      "sourceHashes": {
+        "result.json": "72cf10ff8be0f7fc24eb4912412ec22d97bb00a46d5d199b974c76c6e7b46b54",
+        "events.log": "cf539a7b21c43ad42556d3e22aaa8947de187996678f31b1f71d366a99a4e1ce",
+        "install.log": "382d566e9c3e583c072ae667b08b05c6af687b7abb46230fa4b280996c484d0b",
+        "environment.json": "5909d306733aefa17fe37fa1da91cdce2f86d73bab4d4e75c88c2e39fbd55208"
+      }
+    },
+    {
+      "order": 6,
+      "case": "passive-reset",
+      "startedAt": "2026-09-10T03:08:25.9152498Z",
+      "finishedAt": "2026-09-10T03:08:37.5284299Z",
+      "input": "TightVncReset",
+      "ui": "Passive",
+      "verdict": "TriggerNotReproduced",
+      "menuSeen": false,
+      "menuModeAtObservationEnd": false,
+      "completedBeforeRelease": true,
+      "preReleaseLogQuietSeconds": 0,
+      "releaseSent": false,
+      "progressedAfterRelease": false,
+      "installerExitCode": 0,
+      "cleanupExitCode": 0,
+      "foregroundValidated": true,
+      "flagsBeforeInput": 0,
+      "modifiersDownBeforeInput": false,
+      "inputCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "inputEvents": [
+        {
+          "VirtualKey": 18,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 164,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 165,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 16,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 160,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 161,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 17,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 162,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 163,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 91,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 92,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        },
+        {
+          "VirtualKey": 46,
+          "Flags": 2,
+          "Injected": 1,
+          "LastError": 0
+        }
+      ],
+      "releaseInput": null,
+      "sourceHashes": {
+        "result.json": "5cf0e340db2ce2ca165eac529448c9633ecc1c30c98b43fe9846dd497682516c",
+        "events.log": "cca42f9f47fb514a5a5d9ba1f6e084b97445a73fbce4fc619ae0caca9bef973a",
+        "install.log": "b4775b21e45f16cf01458030afe426679975a624332b11226234b11c3b3274a0",
+        "environment.json": "5909d306733aefa17fe37fa1da91cdce2f86d73bab4d4e75c88c2e39fbd55208"
+      }
+    }
+  ],
+  "additionalTrials": [
+    {
+      "case": "full-reset",
+      "startedAt": "2026-09-10T03:02:50.2681979Z",
+      "finishedAt": "2026-09-10T03:03:18.8352742Z",
+      "input": "TightVncReset",
+      "ui": "Full",
+      "verdict": "TriggerNotReproduced",
+      "injectionAt": "2026-09-10T03:03:09.0339109Z",
+      "menuSeen": false,
+      "completedBeforeRelease": true,
+      "releaseSent": false,
+      "installerExitCode": 0,
+      "cleanupExitCode": 0,
+      "error": null,
+      "rawResultSha256": "5ca964da94c27b1f555be99feeeb621a04b740b23dd5f0d50593e4e79c847222"
+    },
+    {
+      "case": "full-none",
+      "startedAt": "2026-09-10T03:03:20.9252495Z",
+      "finishedAt": "2026-09-10T03:05:21.3052684Z",
+      "input": "None",
+      "ui": "Full",
+      "verdict": "InvalidTest",
+      "injectionAt": null,
+      "menuSeen": false,
+      "completedBeforeRelease": false,
+      "releaseSent": false,
+      "installerExitCode": null,
+      "cleanupExitCode": null,
+      "error": "The close-action boundary was not reached; input was not injected.",
+      "rawResultSha256": "3e466d50307a425f8e729dfd22f1d3f801b30e85cf21dda7b9c2fb53e97c4e2f"
+    }
+  ]
+}
