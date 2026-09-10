@@ -73,7 +73,7 @@ fresh-boot runs on the same build in [alt-setup.md](alt-setup.md).
 The basic UI was checked the same way. With the session verified as primed by the stand-in immediately before and
 after, `repro.ps1 -Input TightVncReset -UI Passive -Precondition None` returned `TriggerNotReproduced`: all twelve
 releases were accepted with msiexec's `#32770` progress dialog foreground, no menu mode was observed, and
-installation and cleanup returned 0. A stock product installer run with `/passive` under the same priming also
+installation and cleanup returned 0. A `/passive` run of the production installer described under Context in the README, under the same priming, also
 completed its close action without a stall. This is expected from the mechanism: the basic UI has no equivalent of
 the `msihnd.dll` send, and in the stand-in a `WM_SYSKEYUP` for an Alt press Windows never saw does not enter menu
 mode through `DefWindowProc` alone (the emulation step is what raises `SC_KEYMENU`).

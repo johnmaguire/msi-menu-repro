@@ -4,6 +4,12 @@ A small WiX installer and input helper for investigating an installation stall t
 
 The test looks for a specific sequence: the installer enters Windows menu mode, installation stops making progress beyond its application-close timeout, and progress resumes when the helper sends Escape. A slow installation or a menu-mode flag alone is not sufficient evidence.
 
+## Findings
+
+Windows Installer's full UI (`msihnd.dll`) sends itself `WM_SYSCOMMAND` / `SC_KEYMENU` on every `WM_SYSKEYUP` for the Alt key, with no check that an Alt press was ever seen, and it ignores `WM_KEYUP`. Windows delivers an unpaired Alt release, such as the ones TightVNC injects when a connection ends, as `WM_KEYUP` in a fresh session and as `WM_SYSKEYUP` once any application in the session has received one clean Alt tap since boot. In a session that has seen such a tap, the release parks the installer's dialog thread in menu mode and every later progress message from the install engine blocks behind it until a key or click arrives; the basic `/passive` UI has no such handler and is unaffected.
+
+Reading order: [docs/priming.md](docs/priming.md) (mechanism, what primes a session, scope), [docs/alt-setup.md](docs/alt-setup.md) (reboot-controlled comparison), [docs/validation.md](docs/validation.md) (first standalone runs), [docs/live-disconnect.md](docs/live-disconnect.md) (real disconnects, fresh sessions).
+
 ## Run the reproduction
 
 Use a disposable **64-bit Windows desktop** with an interactive, unlocked session. Download the `msi-menu-repro-windows-x64` artifact from a successful run in this repository's [GitHub Actions](https://github.com/johnmaguire/msi-menu-repro/actions), then extract the contained `msi-menu-repro.zip`. Builds are unsigned; the download includes a ZIP checksum and the package contains `SHA256SUMS` for its files.
@@ -105,7 +111,7 @@ The [priming measurements](docs/priming.md) then identified the mechanism on the
 
 In the initial `/passive` validation, both input sequences completed installation and removal without entering menu mode or needing Escape. A further `/passive` reset run in a session verified as primed immediately before and after also completed without menu mode. The basic UI has no equivalent of the `msihnd.dll` send, and a `WM_SYSKEYUP` whose Alt press Windows never saw does not enter menu mode through `DefWindowProc` alone. A live TightVNC disconnect during a production upgrade was not tested here.
 
-A subsequent [actual VPN-carried TightVNC disconnect comparison](docs/live-disconnect.md) used stock DNClient upgrades and macOS Screen Sharing. Both full and passive UI completed after the real cleanup burst, without an Alt/Escape setup. This reproduced the disconnect but did not reproduce the original live hang. Those sessions were fresh boots driven with Enter only, which the priming measurements identify as the non-stalling condition; a live disconnect test should be repeated in a session that has received a clean Alt tap.
+A subsequent [actual VPN-carried TightVNC disconnect comparison](docs/live-disconnect.md) used upgrades of the production installer described under [Context](#context) and macOS Screen Sharing. Both full and passive UI completed after the real cleanup burst, without an Alt/Escape setup. This reproduced the disconnect but did not reproduce the original live hang. Those sessions were fresh boots driven with Enter only, which the priming measurements identify as the non-stalling condition; a live disconnect test should be repeated in a session that has received a clean Alt tap.
 
 Record test order, reboot history, setup option, input mode, foreground validation, menu state, and progress before and after recovery. Preserve runs where the trigger did not reproduce alongside successful reproductions.
 
@@ -121,6 +127,12 @@ This is an additional, unvalidated procedure; it is harder to time than the synt
 6. Preserve the output and repeat with `-UI Passive`.
 
 No VPN interruption is needed: the event under test is the last viewer disconnecting while the installer owns the foreground. A result from this procedure should be labeled **live disconnect**, with its timing and connection setup recorded, rather than labeled as synthetic `TightVncReset` input.
+
+## Context
+
+The stall was first captured in the field during an upgrade of [DNClient Desktop](https://www.defined.net/), the Windows client for Defined Networking's Nebula-based VPN. Its installer is a WiX package that closes the running client with `util:CloseApplication` and stops the VPN service, so an upgrade performed over a TightVNC session carried by that VPN drops the viewer's connection at the moment the full-UI progress dialog owns the foreground. The TightVNC server helper then releases every modifier into that dialog, and in a session that has seen an Alt tap the installer freezes at "Stopping Services" until someone reconnects and presses a key or clicks. Memory dumps of the frozen installer showed the dialog thread inside Windows menu mode below `CMsiControl::SysKeyUp` and the close action blocked in `MsiProcessMessage`; that capture is what the synthetic replay in this repository was matched against.
+
+Nothing in this repository depends on that product. The test package is self-contained, and the mechanism applies to any full-UI MSI whose install sequence sends progress messages while the dialog owns the foreground. The live-disconnect measurements in `docs/` used that installer only because it produces the real VPN drop.
 
 ## Build
 

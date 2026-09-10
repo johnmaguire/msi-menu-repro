@@ -78,7 +78,7 @@ Installation should continue making progress when the close timeout expires, wit
 
 Earlier investigation of another installer found its UI thread inside Windows menu mode after `WM_SYSKEYUP` / `SC_KEYMENU`, with an installer notification blocked in `MsiUIMessageContext::Invoke`. The helper in this repository records menu state and MSI progress; a new run does not establish matching thread stacks unless additional captures were taken.
 
-This report asks whether TightVNC can mitigate the interaction during modifier cleanup. It does not assume that releasing modifiers is itself incorrect or that an Alt-tap reproduction proves a specific live disconnect's input sequence.
+The underlying behavior is in Windows Installer, which treats an Alt release it never saw pressed as a request to enter menu mode. This report asks TightVNC for a defensive option rather than a fix for a TightVNC bug: a server setting to disable the modifier reset when a connection ends, or a reset that releases only the modifiers the connection actually pressed. Either would keep an installer from freezing when the viewer's connection is lost mid-install, which is common when the software being installed carries the connection. It does not assume that releasing modifiers is itself incorrect or that an Alt-tap reproduction proves a specific live disconnect's input sequence.
 
 ## Attachments
 
