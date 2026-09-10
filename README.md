@@ -14,7 +14,13 @@ Open **64-bit Windows PowerShell 5.1 as Administrator**, change to the extracted
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\repro.ps1 -Input TightVncReset -UI Full
 ```
 
-If this reports `TriggerNotReproduced`, run the separate `AltTap` control below to demonstrate the Windows Installer behavior. The exact reset can produce different results between runs; preserve the result and record whether the Alt control ran before or after it.
+The exact reset can produce different results depending on earlier input. To replay it after an explicit Alt/Escape setup, use:
+
+```powershell
+.\repro.ps1 -Input TightVncReset -UI Full -Precondition AltTapAndEscape
+```
+
+This first taps Alt, confirms menu mode, then sends Escape and confirms menu mode is clear before replaying the twelve releases. In a [comparison with a reboot before every run](docs/alt-setup.md), the reset stalled in 3/3 runs with this setup and 0/3 without it. The setup alone completed normally. These are results for the tested VM, not a guarantee for every system. The extra setup events are recorded separately from the reset.
 
 Leave the keyboard and mouse alone while the test runs. The helper starts a windowless sleeper, launches the MSI, advances its setup UI, and injects input during the installer's ten-second application-close wait. It checks that the expected installer owns the foreground, records menu state and progress, and observes for up to 35 seconds after injection before attempting recovery with Escape. Observation ends early if installation completes. The helper then finishes the installer and removes its own test product.
 
@@ -23,11 +29,12 @@ Run these controls separately in the same session:
 ```powershell
 .\repro.ps1 -Input AltTap -UI Full
 .\repro.ps1 -Input None -UI Full
+.\repro.ps1 -Input None -UI Full -Precondition AltTapAndEscape
 .\repro.ps1 -Input TightVncReset -UI Passive
 .\repro.ps1 -Input AltTap -UI Passive
 ```
 
-`Full` uses the authored setup wizard. `Passive` uses `msiexec /passive`, the basic progress UI. The helper defaults to `TightVncReset` and `Full` when these arguments are omitted.
+`Full` uses the authored setup wizard. `Passive` uses `msiexec /passive`, the basic progress UI. The helper defaults to `TightVncReset`, `Full`, and `-Precondition None`. The optional `AltTapAndEscape` setup requires full UI. Record run order; to compare the reset with and without setup independently of earlier test input, reboot before each run as described in the [setup experiment](docs/alt-setup.md).
 
 To choose where evidence is written:
 
@@ -45,12 +52,12 @@ The result's verdict distinguishes these outcomes:
 | --- | --- |
 | `Reproduced` | Menu mode and blocked progress were observed, followed by progress after recovery input |
 | `TriggerNotReproduced` | The injected sequence did not enter menu mode in this run |
-| `ControlCompleted` | The no-input control completed normally |
+| `ControlCompleted` | The run with `-Input None` completed normally |
 | `MenuModeWithoutStall` | Menu mode was observed but the measured stall was not |
 | `StallNotReleased` | The suspected stall did not recover as expected; inspect the logs |
 | `InvalidTest` | Test preconditions, injection, or installer execution failed; do not count this as a passing control |
 
-The JSON also records `menuSeen`, `menuModeAtObservationEnd`, `completedBeforeRelease`, `releaseSent`, `progressedAfterRelease`, and installer/cleanup exit codes. These distinguish installation completed before Escape from installation completed because Escape released a stall.
+The JSON also records `menuSeen`, `menuModeAtObservationEnd`, `completedBeforeRelease`, `releaseSent`, `progressedAfterRelease`, and installer/cleanup exit codes. These describe observation and recovery after the selected trigger. Optional setup input and its menu checks are recorded separately under `preconditioning`; the Escape used during setup is distinct from recovery after a stall.
 
 ## What is being tested
 
@@ -70,7 +77,7 @@ The reset sequence is `Alt, Left Alt, Right Alt, Shift, Left Shift, Right Shift,
 8df7e0cefac173f0d87217a64d6972b03291d186dba827ca2cffb8e8954b1f21
 ```
 
-This repository implements the Win32 input calls independently; it does not contain TightVNC source. Replaying those calls does not reproduce every detail of a live connection's teardown. The helper never substitutes an Alt tap when the reset sequence fails to trigger menu mode.
+This repository implements the Win32 input calls independently; it does not contain TightVNC source. Replaying those calls does not reproduce every detail of a live connection's teardown. The helper never substitutes an Alt tap when the reset sequence fails to trigger menu mode. The earlier Alt/Escape setup runs only when explicitly requested with `-Precondition AltTapAndEscape`.
 
 In the original investigation, captured stacks showed this path:
 
@@ -86,13 +93,15 @@ The helper observes `GUI_INMENUMODE` through `GetGUIThreadInfo`; it does not cap
 
 ## Evidence and limits
 
-The [recorded standalone validation](docs/validation.md) used Windows 11 build `26100.9445`, with `msi.dll` at `5.0.26100.9444` and `msihnd.dll` at `5.0.26100.7920`.
+The [initial standalone validation](docs/validation.md) and [follow-up setup experiment](docs/alt-setup.md) used Windows 11 build `26100.9445`, with `msi.dll` at `5.0.26100.9444` and `msihnd.dll` at `5.0.26100.7920`.
 
-With full UI, the paired Alt tap reproduced the stall. The exact TightVNC reset sequence completed normally before that control, then reproduced the stall when tested again afterward in the same desktop session. Both stalls resumed after Escape. These observations establish that the exact reset can trigger the stall, but do not isolate why the two reset trials differed.
+In the initial validation, the paired Alt tap reproduced the stall. The exact TightVNC reset completed normally before that control, then reproduced the stall when tested again afterward in the same desktop session. Both stalls resumed after Escape.
 
-With `/passive`, both input sequences completed installation and removal without entering menu mode or needing Escape. These were synthetic-input tests of this standalone package; a live TightVNC disconnect during a production upgrade was not tested here.
+The follow-up comparison rebooted before each run and held reset timing constant. The exact reset reproduced in all three runs after an explicit Alt/Escape setup and none of three runs without it. One setup-only control also completed normally. This supports the earlier setup as the reason for the changed behavior in that experiment; it does not identify the internal Windows mechanism or establish a reproduction rate for other environments.
 
-Record test order, input mode, foreground validation, menu state, and progress before and after recovery. Preserve runs where the trigger did not reproduce alongside successful reproductions.
+In the initial `/passive` validation, both input sequences completed installation and removal without entering menu mode or needing Escape. These were synthetic-input tests of this standalone package without the explicit setup option; a live TightVNC disconnect during a production upgrade was not tested here.
+
+Record test order, reboot history, setup option, input mode, foreground validation, menu state, and progress before and after recovery. Preserve runs where the trigger did not reproduce alongside successful reproductions.
 
 ## Optional live TightVNC test
 

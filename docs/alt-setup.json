@@ -1,0 +1,999 @@
+{
+  "schemaVersion": 1,
+  "environment": {
+    "build": "26100",
+    "ubr": 9445,
+    "displayVersion": "24H2",
+    "sessionId": 1,
+    "is64BitProcess": true,
+    "dlls": [
+      {
+        "name": "msi.dll",
+        "fileVersion": "5.0.26100.9444",
+        "sha256": "6DF15971D5D40D4BED69F228183A8B4583DC20F43C9F38B72F893A626BF63F2D"
+      },
+      {
+        "name": "msihnd.dll",
+        "fileVersion": "5.0.26100.7920 (WinBuild.160101.0800)",
+        "sha256": "671EE6649DEBDBA28590454B1E8BB80F1BE3D72F11B3B4EAC4485DB9A38D066C"
+      },
+      {
+        "name": "user32.dll",
+        "fileVersion": "10.0.26100.8117 (WinBuild.160101.0800)",
+        "sha256": "93A4310E66A47FA359F588C2EBDA64FE3651771C6F9FF30D462A77215A2E558E"
+      },
+      {
+        "name": "win32u.dll",
+        "fileVersion": "10.0.26100.9444 (WinBuild.160101.0800)",
+        "sha256": "9CD636E8A1B300E2F4B16F339D650EDA71FA02B92B100E4B2F89CE7C04811767"
+      }
+    ],
+    "helperSha256": "89EF05BD7841729FECB19A7793211E271904CA0F34A0BBCD088001C7F727A429",
+    "runnerSha256": "E2E76CAEC10AA2F2871040815C8CB99EBA5EF5A0011B70B983980D95A641C45F"
+  },
+  "experimentalRunnerSha256": "e2e76caec10aa2f2871040815c8cb99eba5ef5a0011b70b983980d95a641c45f",
+  "rawEvidenceZipSha256": "5723340a2e614819bcba251acbdfdf5266df2e8047776e9cb83e537cbddbb9a3",
+  "bootProvenance": "Windows System log, Microsoft-Windows-Kernel-General event12 StartTime. Two case.json files contained zero bytes after reboot; raw results/logs were intact, and boot boundaries were corroborated with these independent events.",
+  "bootEventsSha256": "4de36973a94f3b7fcda4e4361b34f00dc2eb6f455d08b5b6e6556fbdab5f68cd",
+  "runs": [
+    {
+      "case": "control-1",
+      "bootTime": "2026-09-10T04:23:05.5000000Z",
+      "eventRecordId": 2253,
+      "precondition": "None",
+      "input": "TightVncReset",
+      "ui": "Full",
+      "startedAt": "2026-09-10T04:26:33.2357012Z",
+      "finishedAt": "2026-09-10T04:26:51.7008873Z",
+      "closeBoundarySeenAt": "2026-09-10T04:26:40.0963239Z",
+      "injectionAt": "2026-09-10T04:26:44.1178855Z",
+      "verdict": "TriggerNotReproduced",
+      "menuSeen": false,
+      "menuModeAtObservationEnd": false,
+      "completedBeforeRelease": true,
+      "preReleaseLogQuietSeconds": 0.0235684,
+      "releaseSent": false,
+      "progressedAfterRelease": false,
+      "installerExitCode": 0,
+      "cleanupExitCode": 0,
+      "injectionDelaySeconds": 4.021562,
+      "preconditioning": {
+        "name": "None",
+        "startedAt": "2026-09-10T04:26:41.7949271Z",
+        "finishedAt": "2026-09-10T04:26:41.7949271Z",
+        "altCounts": [],
+        "escapeCounts": [],
+        "menuFlagsAfterAlt": null,
+        "menuFlagsAfterEscape": null
+      },
+      "injection": {
+        "Success": true,
+        "Attempted": 12,
+        "Injected": 12,
+        "Counts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "windowAtInjection": {
+        "valid": true,
+        "error": null,
+        "hwnd": "0x4013A",
+        "pid": 5100,
+        "tid": 2612,
+        "className": "MsiDialogCloseClass",
+        "isForeground": true,
+        "flags": 0,
+        "menuOwner": "0x0",
+        "focus": "0x401B4"
+      },
+      "sourceHashes": {
+        "result.json": "e6c22548632b24926ab07b68b7a88cc15c63f4546f15d9cc6add3ff3f54b4908",
+        "environment.json": "477ca1ebabc60e2812520e248be6d95ea92cb482483658f6cb74696fa9d38bd1",
+        "events.log": "529c95d6d5530fbbf9a94f32ccb2a5624822125853dcf72b8f10800ff1d96af8",
+        "install.log": "f46c58718ff1ce7112b11fc06f4843a4a2d713ed4fb59aaf291eb86e525ea368"
+      }
+    },
+    {
+      "case": "primed-1",
+      "bootTime": "2026-09-10T04:26:59.5000000Z",
+      "eventRecordId": 2351,
+      "precondition": "AltTapAndEscape",
+      "input": "TightVncReset",
+      "ui": "Full",
+      "startedAt": "2026-09-10T04:27:37.2371455Z",
+      "finishedAt": "2026-09-10T04:28:24.6266052Z",
+      "closeBoundarySeenAt": "2026-09-10T04:27:43.1784945Z",
+      "injectionAt": "2026-09-10T04:27:47.1920054Z",
+      "verdict": "Reproduced",
+      "menuSeen": true,
+      "menuModeAtObservationEnd": true,
+      "completedBeforeRelease": false,
+      "preReleaseLogQuietSeconds": 28.976143099999998,
+      "releaseSent": true,
+      "progressedAfterRelease": true,
+      "installerExitCode": 0,
+      "cleanupExitCode": 0,
+      "injectionDelaySeconds": 4.013511,
+      "preconditioning": {
+        "name": "AltTapAndEscape",
+        "startedAt": "2026-09-10T04:27:44.8671906Z",
+        "finishedAt": "2026-09-10T04:27:44.9485012Z",
+        "altCounts": [
+          1,
+          1
+        ],
+        "escapeCounts": [
+          2
+        ],
+        "menuFlagsAfterAlt": 12,
+        "menuFlagsAfterEscape": 0
+      },
+      "injection": {
+        "Success": true,
+        "Attempted": 12,
+        "Injected": 12,
+        "Counts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "windowAtInjection": {
+        "valid": true,
+        "error": null,
+        "hwnd": "0x4016E",
+        "pid": 9880,
+        "tid": 9928,
+        "className": "MsiDialogCloseClass",
+        "isForeground": true,
+        "flags": 0,
+        "menuOwner": "0x0",
+        "focus": "0x2036A"
+      },
+      "sourceHashes": {
+        "result.json": "cc5ca2520b35fa3badfd9235f2caec32157d1c1bc6b05f8ac432df91a1148039",
+        "environment.json": "477ca1ebabc60e2812520e248be6d95ea92cb482483658f6cb74696fa9d38bd1",
+        "events.log": "f9947c18470fa6da4842081503e3e54401ab6afefe8421e35544245743e6b2f7",
+        "install.log": "9da06c579b25300ff494cc5051895391df7714af9c57d30df9cd556335fd2ae3"
+      }
+    },
+    {
+      "case": "primed-2",
+      "bootTime": "2026-09-10T04:28:37.5000000Z",
+      "eventRecordId": 2429,
+      "precondition": "AltTapAndEscape",
+      "input": "TightVncReset",
+      "ui": "Full",
+      "startedAt": "2026-09-10T04:29:20.0909969Z",
+      "finishedAt": "2026-09-10T04:30:07.2948011Z",
+      "closeBoundarySeenAt": "2026-09-10T04:29:26.4083816Z",
+      "injectionAt": "2026-09-10T04:29:30.4158529Z",
+      "verdict": "Reproduced",
+      "menuSeen": true,
+      "menuModeAtObservationEnd": true,
+      "completedBeforeRelease": false,
+      "preReleaseLogQuietSeconds": 29.008729499999998,
+      "releaseSent": true,
+      "progressedAfterRelease": true,
+      "installerExitCode": 0,
+      "cleanupExitCode": 0,
+      "injectionDelaySeconds": 4.007471,
+      "preconditioning": {
+        "name": "AltTapAndEscape",
+        "startedAt": "2026-09-10T04:29:28.0996465Z",
+        "finishedAt": "2026-09-10T04:29:28.1747101Z",
+        "altCounts": [
+          1,
+          1
+        ],
+        "escapeCounts": [
+          2
+        ],
+        "menuFlagsAfterAlt": 12,
+        "menuFlagsAfterEscape": 0
+      },
+      "injection": {
+        "Success": true,
+        "Attempted": 12,
+        "Injected": 12,
+        "Counts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "windowAtInjection": {
+        "valid": true,
+        "error": null,
+        "hwnd": "0x4032E",
+        "pid": 9936,
+        "tid": 9932,
+        "className": "MsiDialogCloseClass",
+        "isForeground": true,
+        "flags": 0,
+        "menuOwner": "0x0",
+        "focus": "0x2035C"
+      },
+      "sourceHashes": {
+        "result.json": "d6d8bd82d5b0f1f2fb14731aa1ed7ea55f4a23e801b595002f5dadac78b00d7c",
+        "environment.json": "477ca1ebabc60e2812520e248be6d95ea92cb482483658f6cb74696fa9d38bd1",
+        "events.log": "7db34241303e6ec1253ba780dd71da2f7f85373709394db9a6a8583663efe67b",
+        "install.log": "5bbbbce8acfb9e9cdb1dfd6953929f95ba38fc99d5db3a0b8fe1e6c32143759c"
+      }
+    },
+    {
+      "case": "control-2",
+      "bootTime": "2026-09-10T04:30:20.5000000Z",
+      "eventRecordId": 2517,
+      "precondition": "None",
+      "input": "TightVncReset",
+      "ui": "Full",
+      "startedAt": "2026-09-10T04:30:57.0092972Z",
+      "finishedAt": "2026-09-10T04:31:14.9912621Z",
+      "closeBoundarySeenAt": "2026-09-10T04:31:02.9646398Z",
+      "injectionAt": "2026-09-10T04:31:06.9843169Z",
+      "verdict": "TriggerNotReproduced",
+      "menuSeen": false,
+      "menuModeAtObservationEnd": false,
+      "completedBeforeRelease": true,
+      "preReleaseLogQuietSeconds": 0.033622599999999996,
+      "releaseSent": false,
+      "progressedAfterRelease": false,
+      "installerExitCode": 0,
+      "cleanupExitCode": 0,
+      "injectionDelaySeconds": 4.019677,
+      "preconditioning": {
+        "name": "None",
+        "startedAt": "2026-09-10T04:31:04.6865469Z",
+        "finishedAt": "2026-09-10T04:31:04.6885647Z",
+        "altCounts": [],
+        "escapeCounts": [],
+        "menuFlagsAfterAlt": null,
+        "menuFlagsAfterEscape": null
+      },
+      "injection": {
+        "Success": true,
+        "Attempted": 12,
+        "Injected": 12,
+        "Counts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "windowAtInjection": {
+        "valid": true,
+        "error": null,
+        "hwnd": "0x3021A",
+        "pid": 8360,
+        "tid": 8344,
+        "className": "MsiDialogCloseClass",
+        "isForeground": true,
+        "flags": 0,
+        "menuOwner": "0x0",
+        "focus": "0x30344"
+      },
+      "sourceHashes": {
+        "result.json": "b3b55ba03373b2a17f676bb6f48dc93067d35ea8dba46dbafcb3d3b6080d2e2b",
+        "environment.json": "477ca1ebabc60e2812520e248be6d95ea92cb482483658f6cb74696fa9d38bd1",
+        "events.log": "0cf24a3ba8f4bc12fedde5a85b9035ac49150f22c0153e82286c39236636a3b9",
+        "install.log": "856de92b6432d1ca6feeb6f24088b13bcb41dbf2a10ee6014aaa4d62064e3afc"
+      }
+    },
+    {
+      "case": "control-3",
+      "bootTime": "2026-09-10T04:31:25.5000000Z",
+      "eventRecordId": 2601,
+      "precondition": "None",
+      "input": "TightVncReset",
+      "ui": "Full",
+      "startedAt": "2026-09-10T04:32:03.2296411Z",
+      "finishedAt": "2026-09-10T04:32:21.3313133Z",
+      "closeBoundarySeenAt": "2026-09-10T04:32:09.5503306Z",
+      "injectionAt": "2026-09-10T04:32:13.5741955Z",
+      "verdict": "TriggerNotReproduced",
+      "menuSeen": false,
+      "menuModeAtObservationEnd": false,
+      "completedBeforeRelease": true,
+      "preReleaseLogQuietSeconds": 0.0235656,
+      "releaseSent": false,
+      "progressedAfterRelease": false,
+      "installerExitCode": 0,
+      "cleanupExitCode": 0,
+      "injectionDelaySeconds": 4.023865,
+      "preconditioning": {
+        "name": "None",
+        "startedAt": "2026-09-10T04:32:11.2511210Z",
+        "finishedAt": "2026-09-10T04:32:11.2531280Z",
+        "altCounts": [],
+        "escapeCounts": [],
+        "menuFlagsAfterAlt": null,
+        "menuFlagsAfterEscape": null
+      },
+      "injection": {
+        "Success": true,
+        "Attempted": 12,
+        "Injected": 12,
+        "Counts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "windowAtInjection": {
+        "valid": true,
+        "error": null,
+        "hwnd": "0x30246",
+        "pid": 9952,
+        "tid": 9948,
+        "className": "MsiDialogCloseClass",
+        "isForeground": true,
+        "flags": 0,
+        "menuOwner": "0x0",
+        "focus": "0x400AC"
+      },
+      "sourceHashes": {
+        "result.json": "233a990c3b1360d96a1c0ea18339a0c6691d6d088e344edbdd89baecbc505444",
+        "environment.json": "477ca1ebabc60e2812520e248be6d95ea92cb482483658f6cb74696fa9d38bd1",
+        "events.log": "4ce7881cfe06d599bb54b8130eb9d2cf55c75bbb91a7fc99424884c6fb4518ac",
+        "install.log": "24acf1b109aa19d52805143ef7c8f1517cac4cbdbad663d80fc51207d93000f8"
+      }
+    },
+    {
+      "case": "primed-3",
+      "bootTime": "2026-09-10T04:32:32.5000000Z",
+      "eventRecordId": 2679,
+      "precondition": "AltTapAndEscape",
+      "input": "TightVncReset",
+      "ui": "Full",
+      "startedAt": "2026-09-10T04:33:11.9835496Z",
+      "finishedAt": "2026-09-10T04:33:58.6591577Z",
+      "closeBoundarySeenAt": "2026-09-10T04:33:17.8112246Z",
+      "injectionAt": "2026-09-10T04:33:21.8254053Z",
+      "verdict": "Reproduced",
+      "menuSeen": true,
+      "menuModeAtObservationEnd": true,
+      "completedBeforeRelease": false,
+      "preReleaseLogQuietSeconds": 28.9262715,
+      "releaseSent": true,
+      "progressedAfterRelease": true,
+      "installerExitCode": 0,
+      "cleanupExitCode": 0,
+      "injectionDelaySeconds": 4.014181,
+      "preconditioning": {
+        "name": "AltTapAndEscape",
+        "startedAt": "2026-09-10T04:33:19.5044218Z",
+        "finishedAt": "2026-09-10T04:33:19.5809374Z",
+        "altCounts": [
+          1,
+          1
+        ],
+        "escapeCounts": [
+          2
+        ],
+        "menuFlagsAfterAlt": 12,
+        "menuFlagsAfterEscape": 0
+      },
+      "injection": {
+        "Success": true,
+        "Attempted": 12,
+        "Injected": 12,
+        "Counts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "windowAtInjection": {
+        "valid": true,
+        "error": null,
+        "hwnd": "0x40228",
+        "pid": 4548,
+        "tid": 5876,
+        "className": "MsiDialogCloseClass",
+        "isForeground": true,
+        "flags": 0,
+        "menuOwner": "0x0",
+        "focus": "0x20346"
+      },
+      "sourceHashes": {
+        "result.json": "1827d5efef26f321d016f2568aa75b326c97ea952a5821e162a7a2d63f068a67",
+        "environment.json": "477ca1ebabc60e2812520e248be6d95ea92cb482483658f6cb74696fa9d38bd1",
+        "events.log": "b51ad444a6e1cc9bc2aee3e9260a27f8f0d72e466fe313a34faa0de2e28dc44d",
+        "install.log": "e1501cbfcd4205d98ba2a0c2e7179f2baff05de5a3624b2045fb108582a7e84c"
+      }
+    },
+    {
+      "case": "precondition-only-1",
+      "bootTime": "2026-09-10T04:34:40.5000000Z",
+      "eventRecordId": 2768,
+      "precondition": "AltTapAndEscape",
+      "input": "None",
+      "ui": "Full",
+      "startedAt": "2026-09-10T04:35:19.9634031Z",
+      "finishedAt": "2026-09-10T04:35:38.3131364Z",
+      "closeBoundarySeenAt": "2026-09-10T04:35:26.2142931Z",
+      "injectionAt": "2026-09-10T04:35:30.2198815Z",
+      "verdict": "ControlCompleted",
+      "menuSeen": false,
+      "menuModeAtObservationEnd": false,
+      "completedBeforeRelease": true,
+      "preReleaseLogQuietSeconds": 0.0398125,
+      "releaseSent": false,
+      "progressedAfterRelease": false,
+      "installerExitCode": 0,
+      "cleanupExitCode": 0,
+      "injectionDelaySeconds": 4.005588,
+      "preconditioning": {
+        "name": "AltTapAndEscape",
+        "startedAt": "2026-09-10T04:35:27.9186223Z",
+        "finishedAt": "2026-09-10T04:35:27.9977844Z",
+        "altCounts": [
+          1,
+          1
+        ],
+        "escapeCounts": [
+          2
+        ],
+        "menuFlagsAfterAlt": 12,
+        "menuFlagsAfterEscape": 0
+      },
+      "injection": null,
+      "windowAtInjection": {
+        "valid": true,
+        "error": null,
+        "hwnd": "0x30264",
+        "pid": 9900,
+        "tid": 9908,
+        "className": "MsiDialogCloseClass",
+        "isForeground": true,
+        "flags": 0,
+        "menuOwner": "0x0",
+        "focus": "0x20358"
+      },
+      "sourceHashes": {
+        "result.json": "e0330a4be7cd69bad1956cd7fa32210c5c2a302087819022760ce6f3d34367c7",
+        "environment.json": "477ca1ebabc60e2812520e248be6d95ea92cb482483658f6cb74696fa9d38bd1",
+        "events.log": "f6f97e8d898e827f5207ca1fc79ea8e4fabad2dbeffbc413dca5fabc8ac9702c",
+        "install.log": "2b9994602e04ff0487229014dd7bd5c86fa0c29f574ce0623febdb268cb9c431"
+      }
+    }
+  ],
+  "altTabTrials": [
+    {
+      "schemaVersion": 1,
+      "input": "TightVncReset",
+      "ui": "Full",
+      "startedAt": "2026-09-10T04:45:26.2180385Z",
+      "verdict": "InvalidTest",
+      "precondition": "AltTabAwayAndBack",
+      "preconditioning": {
+        "name": "AltTabAwayAndBack",
+        "startedAt": "2026-09-10T04:45:34.6697237Z",
+        "initialWindow": {
+          "valid": true,
+          "error": null,
+          "hwnd": "0x70304",
+          "pid": 9448,
+          "tid": 9564,
+          "className": "MsiDialogCloseClass",
+          "isForeground": true,
+          "flags": 0,
+          "menuOwner": "0x0",
+          "focus": "0x20358"
+        },
+        "altInput": null,
+        "menuAfterAlt": null,
+        "escapeInput": null,
+        "menuAfterEscape": null,
+        "finishedAt": null,
+        "consoleWindow": "0x201AC",
+        "awayInput": {
+          "Success": true,
+          "Counts": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "Errors": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "Attempted": 4,
+          "CleanupCounts": [],
+          "Error": null,
+          "ForegroundBefore": 459524,
+          "ForegroundAfter": 459524
+        },
+        "awayWindow": {
+          "valid": true,
+          "error": null,
+          "hwnd": "0x10120",
+          "pid": 5904,
+          "tid": 4580,
+          "className": "ForegroundStaging",
+          "isForeground": true,
+          "flags": 0,
+          "menuOwner": "0x0",
+          "focus": "0x10120"
+        }
+      },
+      "closeBoundarySeenAt": "2026-09-10T04:45:32.9609897Z",
+      "actualInjectionDelaySeconds": null,
+      "package": "C:\\msi-menu-repro-history\\MsiMenuRepro.msi",
+      "productCode": "{5808E40F-7F07-400C-ADE4-8F502704811D}",
+      "packageSha256": "311FA1E462886079E80F9C15C475AB9A8A10772E59D25BB17295775E0FC4B53B",
+      "observeSeconds": 25,
+      "totalObservationSeconds": 35,
+      "injectionAt": null,
+      "injection": null,
+      "keyboardBefore": {
+        "ForegroundThreadId": 9564,
+        "KeyboardLayout": "0x0000000004090409",
+        "Keys": [
+          {
+            "Name": "Alt",
+            "VirtualKey": 18,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "LeftAlt",
+            "VirtualKey": 164,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "RightAlt",
+            "VirtualKey": 165,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "Shift",
+            "VirtualKey": 16,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "LeftShift",
+            "VirtualKey": 160,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "RightShift",
+            "VirtualKey": 161,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "Control",
+            "VirtualKey": 17,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "LeftControl",
+            "VirtualKey": 162,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "RightControl",
+            "VirtualKey": 163,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "LeftWindows",
+            "VirtualKey": 91,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "RightWindows",
+            "VirtualKey": 92,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "Delete",
+            "VirtualKey": 46,
+            "Down": false,
+            "Toggle": false
+          }
+        ]
+      },
+      "windowAtInjection": {
+        "valid": true,
+        "error": null,
+        "hwnd": "0x70304",
+        "pid": 9448,
+        "tid": 9564,
+        "className": "MsiDialogCloseClass",
+        "isForeground": true,
+        "flags": 0,
+        "menuOwner": "0x0",
+        "focus": "0x20358"
+      },
+      "menuSeen": false,
+      "menuModeAtObservationEnd": false,
+      "completedBeforeRelease": false,
+      "preReleaseLogQuietSeconds": null,
+      "releaseSent": false,
+      "releaseInput": null,
+      "progressedAfterRelease": false,
+      "installerExitCode": null,
+      "cleanupExitCode": null,
+      "keepInstalled": false,
+      "error": "Alt-Tab did not reach the known classic console; refusing the return shortcut.",
+      "cleanupError": null,
+      "msiPid": 9448,
+      "finishedAt": "2026-09-10T04:45:34.7604169Z"
+    },
+    {
+      "schemaVersion": 1,
+      "input": "TightVncReset",
+      "ui": "Full",
+      "startedAt": "2026-09-10T04:47:20.9069323Z",
+      "verdict": "TriggerNotReproduced",
+      "precondition": "AltTabAwayAndBack",
+      "preconditioning": {
+        "name": "AltTabAwayAndBack",
+        "startedAt": "2026-09-10T04:47:30.5935306Z",
+        "initialWindow": {
+          "valid": true,
+          "error": null,
+          "hwnd": "0x4026C",
+          "pid": 10088,
+          "tid": 10092,
+          "className": "MsiDialogCloseClass",
+          "isForeground": true,
+          "flags": 0,
+          "menuOwner": "0x0",
+          "focus": "0x20366"
+        },
+        "altInput": null,
+        "menuAfterAlt": null,
+        "escapeInput": null,
+        "menuAfterEscape": null,
+        "finishedAt": "2026-09-10T04:47:30.7420313Z",
+        "consoleWindow": "0x30012",
+        "awayInput": {
+          "Success": true,
+          "Counts": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "Errors": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "Attempted": 4,
+          "CleanupCounts": [],
+          "Error": null,
+          "ForegroundBefore": 262764,
+          "ForegroundAfter": 262764
+        },
+        "awayWindow": {
+          "valid": true,
+          "error": null,
+          "hwnd": "0x30012",
+          "pid": 10172,
+          "tid": 10176,
+          "className": "ConsoleWindowClass",
+          "isForeground": true,
+          "flags": 0,
+          "menuOwner": "0x0",
+          "focus": "0x0"
+        },
+        "returnInput": {
+          "Success": true,
+          "Counts": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "Errors": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "Attempted": 4,
+          "CleanupCounts": [],
+          "Error": null,
+          "ForegroundBefore": 196626,
+          "ForegroundAfter": 196626
+        },
+        "returnedWindow": {
+          "valid": true,
+          "error": null,
+          "hwnd": "0x4026C",
+          "pid": 10088,
+          "tid": 10092,
+          "className": "MsiDialogCloseClass",
+          "isForeground": true,
+          "flags": 0,
+          "menuOwner": "0x0",
+          "focus": "0x20366"
+        }
+      },
+      "closeBoundarySeenAt": "2026-09-10T04:47:28.8941858Z",
+      "actualInjectionDelaySeconds": 4.0073726,
+      "package": "C:\\msi-menu-repro-history\\MsiMenuRepro.msi",
+      "productCode": "{5808E40F-7F07-400C-ADE4-8F502704811D}",
+      "packageSha256": "311FA1E462886079E80F9C15C475AB9A8A10772E59D25BB17295775E0FC4B53B",
+      "observeSeconds": 25,
+      "totalObservationSeconds": 35,
+      "injectionAt": "2026-09-10T04:47:32.9055742Z",
+      "injection": {
+        "Success": true,
+        "Attempted": 12,
+        "Injected": 12,
+        "LastError": 0,
+        "Error": null,
+        "ForegroundBefore": 262764,
+        "ForegroundAfter": 262764,
+        "Events": [
+          {
+            "VirtualKey": 18,
+            "Flags": 2,
+            "Injected": 1,
+            "LastError": 0
+          },
+          {
+            "VirtualKey": 164,
+            "Flags": 2,
+            "Injected": 1,
+            "LastError": 0
+          },
+          {
+            "VirtualKey": 165,
+            "Flags": 2,
+            "Injected": 1,
+            "LastError": 0
+          },
+          {
+            "VirtualKey": 16,
+            "Flags": 2,
+            "Injected": 1,
+            "LastError": 0
+          },
+          {
+            "VirtualKey": 160,
+            "Flags": 2,
+            "Injected": 1,
+            "LastError": 0
+          },
+          {
+            "VirtualKey": 161,
+            "Flags": 2,
+            "Injected": 1,
+            "LastError": 0
+          },
+          {
+            "VirtualKey": 17,
+            "Flags": 2,
+            "Injected": 1,
+            "LastError": 0
+          },
+          {
+            "VirtualKey": 162,
+            "Flags": 2,
+            "Injected": 1,
+            "LastError": 0
+          },
+          {
+            "VirtualKey": 163,
+            "Flags": 2,
+            "Injected": 1,
+            "LastError": 0
+          },
+          {
+            "VirtualKey": 91,
+            "Flags": 2,
+            "Injected": 1,
+            "LastError": 0
+          },
+          {
+            "VirtualKey": 92,
+            "Flags": 2,
+            "Injected": 1,
+            "LastError": 0
+          },
+          {
+            "VirtualKey": 46,
+            "Flags": 2,
+            "Injected": 1,
+            "LastError": 0
+          }
+        ],
+        "Counts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "keyboardBefore": {
+        "ForegroundThreadId": 10092,
+        "KeyboardLayout": "0x0000000004090409",
+        "Keys": [
+          {
+            "Name": "Alt",
+            "VirtualKey": 18,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "LeftAlt",
+            "VirtualKey": 164,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "RightAlt",
+            "VirtualKey": 165,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "Shift",
+            "VirtualKey": 16,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "LeftShift",
+            "VirtualKey": 160,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "RightShift",
+            "VirtualKey": 161,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "Control",
+            "VirtualKey": 17,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "LeftControl",
+            "VirtualKey": 162,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "RightControl",
+            "VirtualKey": 163,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "LeftWindows",
+            "VirtualKey": 91,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "RightWindows",
+            "VirtualKey": 92,
+            "Down": false,
+            "Toggle": false
+          },
+          {
+            "Name": "Delete",
+            "VirtualKey": 46,
+            "Down": false,
+            "Toggle": false
+          }
+        ]
+      },
+      "windowAtInjection": {
+        "valid": true,
+        "error": null,
+        "hwnd": "0x4026C",
+        "pid": 10088,
+        "tid": 10092,
+        "className": "MsiDialogCloseClass",
+        "isForeground": true,
+        "flags": 0,
+        "menuOwner": "0x0",
+        "focus": "0x20366"
+      },
+      "menuSeen": false,
+      "menuModeAtObservationEnd": false,
+      "completedBeforeRelease": true,
+      "preReleaseLogQuietSeconds": 0.0139502,
+      "releaseSent": false,
+      "releaseInput": null,
+      "progressedAfterRelease": false,
+      "installerExitCode": 0,
+      "cleanupExitCode": 0,
+      "keepInstalled": false,
+      "error": null,
+      "cleanupError": null,
+      "msiPid": 10088,
+      "beforeBurstLogLength": 50472,
+      "finishedAt": "2026-09-10T04:47:40.4119268Z"
+    }
+  ]
+}
