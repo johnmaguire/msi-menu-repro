@@ -3,6 +3,7 @@
 param(
     [Alias('Input')][ValidateSet('TightVncReset','AltTap','None')][string]$InputMode = 'TightVncReset',
     [ValidateSet('Full','Passive')][string]$UI = 'Full',
+    [ValidateSet('None','AltTapAndEscape')][string]$Precondition = 'None',
     [string]$MsiPath,
     [string]$OutputDirectory,
     [ValidateRange(15,120)][int]$ObserveSeconds = 25,
@@ -10,6 +11,9 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 2
+if ($Precondition -eq 'AltTapAndEscape' -and $UI -ne 'Full') {
+    throw 'AltTapAndEscape preconditioning requires -UI Full.'
+}
 $productCode = '{5808E40F-7F07-400C-ADE4-8F502704811D}'
 $productName = 'MSI Menu Reproduction'
 $completionAction = if ($UI -eq 'Full') { 'ExecuteAction' } else { 'INSTALL' }
@@ -45,6 +49,7 @@ $packageValidated = $false
 $dialog = [IntPtr]::Zero
 $result = [ordered]@{
     schemaVersion=1; input=$InputMode; ui=$UI; startedAt=[DateTime]::UtcNow.ToString('o'); verdict='InvalidTest'
+    precondition=$Precondition; preconditioning=$null; closeBoundarySeenAt=$null; actualInjectionDelaySeconds=$null
     package=$MsiPath; productCode=$productCode; packageSha256=(Get-FileHash -LiteralPath $MsiPath -Algorithm SHA256).Hash
     observeSeconds=$ObserveSeconds; totalObservationSeconds=(10+$ObserveSeconds); injectionAt=$null; injection=$null; keyboardBefore=$null; windowAtInjection=$null
     menuSeen=$false; menuModeAtObservationEnd=$false; completedBeforeRelease=$false
@@ -120,7 +125,7 @@ try {
         [ordered]@{name=$name;fileVersion=$file.VersionInfo.FileVersion;sha256=(Get-FileHash $file.FullName -Algorithm SHA256).Hash}
     }
     $windows = Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
-    $environment = [ordered]@{build=$windows.CurrentBuildNumber;ubr=$windows.UBR;displayVersion=$windows.DisplayVersion;sessionId=[Diagnostics.Process]::GetCurrentProcess().SessionId;is64BitProcess=[Environment]::Is64BitProcess;dlls=@($versionFiles);helperSha256=(Get-FileHash $nativePath -Algorithm SHA256).Hash}
+    $environment = [ordered]@{build=$windows.CurrentBuildNumber;ubr=$windows.UBR;displayVersion=$windows.DisplayVersion;sessionId=[Diagnostics.Process]::GetCurrentProcess().SessionId;is64BitProcess=[Environment]::Is64BitProcess;dlls=@($versionFiles);helperSha256=(Get-FileHash $nativePath -Algorithm SHA256).Hash;runnerSha256=(Get-FileHash $PSCommandPath -Algorithm SHA256).Hash}
     $environment | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $OutputDirectory 'environment.json') -Encoding UTF8
     if (Installed) { [void](RemoveProduct 'prepare-uninstall.log') }
     if (Get-Process -Name 'msi-menu-repro-sleeper' -ErrorAction SilentlyContinue) { throw 'A reproduction sleeper is already running; wait for it to exit before starting another run.' }
@@ -138,7 +143,7 @@ try {
     while (-not $msi.HasExited -and [DateTime]::UtcNow -lt $deadline) {
         $text = ReadLog
         if ($text -match 'Doing action: ExecuteAction') { $executeSeen = $true }
-        if ($text -match 'Entrypoint: WixCloseApplications(?:\r|\n|$)') { $boundary=$true; break }
+        if ($text -match 'Entrypoint: WixCloseApplications(?:\r|\n|$)') { $boundary=$true; $boundaryAt=[DateTime]::UtcNow; $result.closeBoundarySeenAt=$boundaryAt.ToString('o'); break }
         if ($UI -eq 'Full' -and -not $executeSeen -and ([DateTime]::UtcNow-$lastEnter).TotalSeconds -gt 1.2) {
             $dialog = [MsiMenuRepro.Native]::FindDialog([uint32]$msi.Id,$className)
             if ($dialog -ne [IntPtr]::Zero -and [MsiMenuRepro.Native]::TryForeground($dialog)) {
@@ -162,12 +167,58 @@ try {
     $result.windowAtInjection=$snapshot
     $result.keyboardBefore=[MsiMenuRepro.Native]::KeyboardState()
     if (@($result.keyboardBefore.Keys | Where-Object Down).Count) { throw 'A modifier or Delete key is down. Release keys and start a fresh run; the runner will not reset keyboard state before replay.' }
+    $initialWindow=$snapshot
+    $preconditionResult=[ordered]@{name=$Precondition;startedAt=[DateTime]::UtcNow.ToString('o');initialWindow=$snapshot;altInput=$null;menuAfterAlt=$null;escapeInput=$null;menuAfterEscape=$null;finishedAt=$null}
+    $result.preconditioning=$preconditionResult
+    function CheckedSnapshot {
+        $current=Snapshot $dialog
+        if (-not $current.valid -or -not $current.isForeground -or $current.pid -ne $initialWindow.pid -or $current.tid -ne $initialWindow.tid -or $current.className -ne $initialWindow.className) { throw 'The precondition target changed or lost foreground.' }
+        return $current
+    }
+    function WaitMenu([bool]$wanted) {
+        $deadline=[DateTime]::UtcNow.AddSeconds(1)
+        do {
+            $current=CheckedSnapshot
+            if ([bool]($current.flags -band 4) -eq $wanted) { return $current }
+            Start-Sleep -Milliseconds 10
+        } while ([DateTime]::UtcNow -lt $deadline)
+        throw "Preconditioning did not reach menu mode=$wanted."
+    }
+    if ($Precondition -eq 'AltTapAndEscape') {
+        $preconditionResult.altInput=[MsiMenuRepro.Native]::AltTap($dialog)
+        CheckInput $preconditionResult.altInput
+        $preconditionResult.menuAfterAlt=WaitMenu $true
+        Log ('Precondition menu entered: ' + ($preconditionResult.menuAfterAlt | ConvertTo-Json -Compress))
+        $preconditionResult.escapeInput=[MsiMenuRepro.Native]::PressKey($dialog,0x1B)
+        CheckInput $preconditionResult.escapeInput
+        $preconditionResult.menuAfterEscape=WaitMenu $false
+        Log ('Precondition menu dismissed: ' + ($preconditionResult.menuAfterEscape | ConvertTo-Json -Compress))
+    }
+    $preconditionResult.finishedAt=[DateTime]::UtcNow.ToString('o')
+    # Both arms inject at the same close-action offset to separate history from timing.
+    $injectionTarget=$boundaryAt.AddSeconds(4)
+    while ([DateTime]::UtcNow -lt $injectionTarget) {
+        $snapshot=CheckedSnapshot
+        if ($snapshot.flags -band 4) { throw 'Menu mode returned before the exact replay.' }
+        Start-Sleep -Milliseconds 10
+    }
+    $snapshot=CheckedSnapshot
+    if ($snapshot.flags -band 4) { throw 'Menu mode is active before the exact replay.' }
+    $result.windowAtInjection=$snapshot
+    $result.keyboardBefore=[MsiMenuRepro.Native]::KeyboardState()
+    if (@($result.keyboardBefore.Keys | Where-Object Down).Count) { throw 'A modifier or Delete key is down before the replay.' }
+    $beforeBurst=ReadLog
+    if ($beforeBurst -match 'Action ended [^\r\n]*(Wix4CloseApplications_X64|InstallFinalize)\. Return value') { throw 'The close action already completed before the replay.' }
+    $result['beforeBurstLogLength']=$beforeBurst.Length
     Log ('Before input: ' + ($snapshot | ConvertTo-Json -Compress))
-    $result.injectionAt=[DateTime]::UtcNow.ToString('o')
+    $injectionAt=[DateTime]::UtcNow
+    $result.injectionAt=$injectionAt.ToString('o')
+    $result.actualInjectionDelaySeconds=($injectionAt-$boundaryAt).TotalSeconds
+    if ($result.actualInjectionDelaySeconds -gt 4.3) { throw 'Missed the common four-second injection deadline.' }
     switch ($InputMode) {
         'TightVncReset' { $sent=[MsiMenuRepro.Native]::ResetModifiers($dialog); $result.injection=$sent; CheckInput $sent }
         'AltTap' { $sent=[MsiMenuRepro.Native]::AltTap($dialog); $result.injection=$sent; CheckInput $sent }
-        'None' { Log 'No input injected (control)' }
+        'None' { Log 'No trigger injected (control)' }
     }
     Log ('Input result: ' + ($result.injection | ConvertTo-Json -Depth 5 -Compress))
     # Observe past the real close timeout before calling a quiet log a stall.
