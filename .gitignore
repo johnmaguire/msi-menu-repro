@@ -6,3 +6,4 @@
 *.dmp
 .DS_Store
 .build/
+/standin-results/

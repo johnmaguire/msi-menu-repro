@@ -14,15 +14,17 @@ Open **64-bit Windows PowerShell 5.1 as Administrator**, change to the extracted
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\repro.ps1 -Input TightVncReset -UI Full
 ```
 
-The exact reset can produce different results depending on earlier input. To replay it after an explicit Alt/Escape setup, use:
+The exact reset only stalls a session in which Windows has already delivered one clean Alt tap (Alt down, Alt up, nothing else) to any application since boot; on a fresh boot it completes normally. The mechanism and measurements are in [docs/priming.md](docs/priming.md). To replay it after an explicit Alt/Escape setup, use:
 
 ```powershell
 .\repro.ps1 -Input TightVncReset -UI Full -Precondition AltTapAndEscape
 ```
 
-This first taps Alt, confirms menu mode, then sends Escape and confirms menu mode is clear before replaying the twelve releases. In a [comparison with a reboot before every run](docs/alt-setup.md), the reset stalled in 3/3 runs with this setup and 0/3 without it. The setup alone completed normally. These are results for the tested VM, not a guarantee for every system. The extra setup events are recorded separately from the reset.
+This first taps Alt, confirms menu mode, then sends Escape and confirms menu mode is clear before replaying the twelve releases. In a [comparison with a reboot before every run](docs/alt-setup.md), the reset stalled in 3/3 runs with this setup and 0/3 without it. The setup alone completed normally. The extra setup events are recorded separately from the reset. Because the setup runs inside the installer process, it also consumes `msihnd.dll`'s per-process toggle on Alt releases, so the stall in that mode is raised by the reset's second Alt release rather than its first; see [docs/priming.md](docs/priming.md). An Alt tap delivered to any other application before `repro.ps1` starts primes the session without that side effect.
 
 Leave the keyboard and mouse alone while the test runs. The helper starts a windowless sleeper, launches the MSI, advances its setup UI, and injects input during the installer's ten-second application-close wait. It checks that the expected installer owns the foreground, records menu state and progress, and observes for up to 35 seconds after injection before attempting recovery with Escape. Observation ends early if installation completes. The helper then finishes the installer and removes its own test product.
+
+To check whether a session is primed without involving the installer, or to reproduce the classification change directly, use [`standin.ps1`](standin.ps1), a plain-window harness that logs whether each injected Alt release arrives as `WM_KEYUP` or `WM_SYSKEYUP`; usage is in [docs/priming.md](docs/priming.md).
 
 Run these controls separately in the same session:
 
@@ -97,11 +99,13 @@ The [initial standalone validation](docs/validation.md) and [follow-up setup exp
 
 In the initial validation, the paired Alt tap reproduced the stall. The exact TightVNC reset completed normally before that control, then reproduced the stall when tested again afterward in the same desktop session. Both stalls resumed after Escape.
 
-The follow-up comparison rebooted before each run and held reset timing constant. The exact reset reproduced in all three runs after an explicit Alt/Escape setup and none of three runs without it. One setup-only control also completed normally. This supports the earlier setup as the reason for the changed behavior in that experiment; it does not identify the internal Windows mechanism or establish a reproduction rate for other environments.
+The follow-up comparison rebooted before each run and held reset timing constant. The exact reset reproduced in all three runs after an explicit Alt/Escape setup and none of three runs without it. One setup-only control also completed normally. This supports the earlier setup as the reason for the changed behavior in that experiment.
 
-In the initial `/passive` validation, both input sequences completed installation and removal without entering menu mode or needing Escape. These were synthetic-input tests of this standalone package without the explicit setup option; a live TightVNC disconnect during a production upgrade was not tested here.
+The [priming measurements](docs/priming.md) then identified the mechanism on the same build. `msihnd.dll` sends `SC_KEYMENU` on every `WM_SYSKEYUP` for the Alt key with no other check and has no `WM_KEYUP` handler. On a fresh boot Windows delivers an unpaired Alt release as `WM_KEYUP`; after one clean Alt tap anywhere in the session it delivers the same event, with the same `lParam`, as `WM_SYSKEYUP`, and keeps doing so until reboot. The state is session-wide: an Alt tap on an unrelated application primed the installer in two further runs of this package with `-Precondition None`. Alt+Tab, Alt+letter, Alt+F4, F10, and unpaired releases do not prime. The Windows variable holding the state was not identified; no kernel trace was taken.
 
-A subsequent [actual VPN-carried TightVNC disconnect comparison](docs/live-disconnect.md) used stock DNClient upgrades and macOS Screen Sharing. Both full and passive UI completed after the real cleanup burst, without an Alt/Escape setup. This reproduced the disconnect but did not reproduce the original live hang.
+In the initial `/passive` validation, both input sequences completed installation and removal without entering menu mode or needing Escape. A further `/passive` reset run in a session verified as primed immediately before and after also completed without menu mode. The basic UI has no equivalent of the `msihnd.dll` send, and a `WM_SYSKEYUP` whose Alt press Windows never saw does not enter menu mode through `DefWindowProc` alone. A live TightVNC disconnect during a production upgrade was not tested here.
+
+A subsequent [actual VPN-carried TightVNC disconnect comparison](docs/live-disconnect.md) used stock DNClient upgrades and macOS Screen Sharing. Both full and passive UI completed after the real cleanup burst, without an Alt/Escape setup. This reproduced the disconnect but did not reproduce the original live hang. Those sessions were fresh boots driven with Enter only, which the priming measurements identify as the non-stalling condition; a live disconnect test should be repeated in a session that has received a clean Alt tap.
 
 Record test order, reboot history, setup option, input mode, foreground validation, menu state, and progress before and after recovery. Preserve runs where the trigger did not reproduce alongside successful reproductions.
 
@@ -110,16 +114,17 @@ Record test order, reboot history, setup option, input mode, foreground validati
 This is an additional, unvalidated procedure; it is harder to time than the synthetic replay.
 
 1. Use a Windows VM with TightVNC Server and an independent local or hypervisor console. Record the server and viewer versions and ensure there is only one viewer connected.
-2. Through the viewer, start `repro.ps1 -Input None -UI Full` and let the installer reach its application-close wait.
-3. Disconnect the viewer during that wait. Do not send an extra click or key to the remote Windows desktop while disconnecting.
-4. Observe through the independent console without clicking, changing focus, or pressing a key in Windows until the helper's observation period ends. The helper handles recovery afterward.
-5. Preserve the output and repeat with `-UI Passive`.
+2. Decide whether the session should be primed and record it. A fresh boot with no Alt input is expected not to stall; to test the primed case, tap Alt once on any application (Notepad is enough) through the viewer before starting, and confirm with `standin.ps1 -Steps burst,esc` where the console allows it.
+3. Through the viewer, start `repro.ps1 -Input None -UI Full` and let the installer reach its application-close wait.
+4. Disconnect the viewer during that wait. Do not send an extra click or key to the remote Windows desktop while disconnecting.
+5. Observe through the independent console without clicking, changing focus, or pressing a key in Windows until the helper's observation period ends. The helper handles recovery afterward.
+6. Preserve the output and repeat with `-UI Passive`.
 
 No VPN interruption is needed: the event under test is the last viewer disconnecting while the installer owns the foreground. A result from this procedure should be labeled **live disconnect**, with its timing and connection setup recorded, rather than labeled as synthetic `TightVncReset` input.
 
 ## Build
 
-The Windows GitHub Actions workflow builds the MSI with WiX 6.0.2 and matching extensions, and compiles the C# helper and sleeper using .NET Framework. Its ZIP contains `MsiMenuRepro.msi`, `Repro.Native.dll`, `msi-menu-repro-sleeper.exe`, `repro.ps1`, and documentation. CI builds the binaries and smoke-tests quiet installation/removal; it does not exercise the interactive stall.
+The Windows GitHub Actions workflow builds the MSI with WiX 6.0.2 and matching extensions, and compiles the C# helper and sleeper using .NET Framework. Its ZIP contains `MsiMenuRepro.msi`, `Repro.Native.dll`, `msi-menu-repro-sleeper.exe`, `repro.ps1`, `standin.ps1`, and documentation. CI builds the binaries and smoke-tests quiet installation/removal; it does not exercise the interactive stall.
 
 To build locally on Windows, install the .NET 8 SDK and use Windows PowerShell 5.1:
 

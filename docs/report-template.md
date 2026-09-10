@@ -21,6 +21,7 @@ The standalone reproduction installs a harmless payload and uses a windowless sl
 - Windows PowerShell version:
 - Console/session type and elevation:
 - Test order, reboot/session boundaries, and any earlier Alt input:
+- Session primed before the run (a clean Alt tap on any application since boot; see docs/priming.md), and how that was verified (for example `standin.ps1 -Steps burst,esc` reporting `WM_SYSKEYUP`):
 - Explicit `-Precondition` option, including whether setup entered and exited menu mode:
 - TightVNC Server version, if used:
 - Viewer name/version and operating system, if used:

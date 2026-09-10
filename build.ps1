@@ -41,7 +41,7 @@ if (-not (Test-Path -LiteralPath $builtMsi -PathType Leaf)) {
     throw "WiX did not produce $builtMsi."
 }
 Copy-Item -LiteralPath $builtMsi -Destination $packageDirectory
-foreach ($name in @('repro.ps1', 'README.md')) {
+foreach ($name in @('repro.ps1', 'standin.ps1', 'README.md')) {
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot $name) -Destination $packageDirectory
 }
 if (Test-Path -LiteralPath (Join-Path $PSScriptRoot 'LICENSE')) {
