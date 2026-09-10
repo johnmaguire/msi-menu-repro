@@ -101,6 +101,8 @@ The follow-up comparison rebooted before each run and held reset timing constant
 
 In the initial `/passive` validation, both input sequences completed installation and removal without entering menu mode or needing Escape. These were synthetic-input tests of this standalone package without the explicit setup option; a live TightVNC disconnect during a production upgrade was not tested here.
 
+A subsequent [actual VPN-carried TightVNC disconnect comparison](docs/live-disconnect.md) used stock DNClient upgrades and macOS Screen Sharing. Both full and passive UI completed after the real cleanup burst, without an Alt/Escape setup. This reproduced the disconnect but did not reproduce the original live hang.
+
 Record test order, reboot history, setup option, input mode, foreground validation, menu state, and progress before and after recovery. Preserve runs where the trigger did not reproduce alongside successful reproductions.
 
 ## Optional live TightVNC test
